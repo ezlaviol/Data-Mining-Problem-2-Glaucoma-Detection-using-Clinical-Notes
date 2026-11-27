@@ -1,0 +1,11 @@
+
+Project Reflection
+
+(a) What’s your biggest challenge in the project? How did you address the challenge?
+My biggest challenge was dealing with overfitting and false positives in the Bidirectional GRU model. Clinical notes are messy and long, and a lot of patients without glaucoma still have phrases like "glaucoma suspect" or "family history of glaucoma" in their charts. Even though the Bi-GRU's training loss got very low (down to 0.0703), it started memorizing those keywords and predicting "yes" too often, which tanked its specificity down to 0.6443. To handle this, I made sure the vocabulary (top 10,000 words) was built strictly from the training data so no test data leaked in, capped sequences at 256 tokens with 0.30 dropout, and compared it against a 1D CNN. The 1D CNN ended up handling local phrase patterns much better, bringing specificity up to 0.8151 and overall AUC to 0.8793.
+
+(b) What did you learn from the final project? (What could have been done better?)
+The biggest takeaway for me was seeing firsthand that a lower training loss doesn't mean a better model—especially with medical text. It was also really interesting to see how model choice affects fairness across racial groups: the 1D CNN didn't just score higher overall, it also had a smaller performance gap across Asian, Black, and White patients (0.0469 vs. 0.0682). If I had more time, I would replace the 256-word cutoff and random word embeddings with a pretrained medical model like ClinicalBERT so it can read the entire note and already understand medical terms. I would also add early stopping so the Bi-GRU stops training before it starts memorizing the training set.
+
+(c) What’s your self-evaluation for code and report? A, B, C, or D? Why?
+Grade: A. The Python script meets every requirement posed by the project. It handles preprocessing without data leakage, trains two distinct neural networks from scratch, and calculates all required overall and racial subgroup metrics. The IEEE report clearly explains the model architectures, math, training behavior, and error analysis, and includes a working GitHub link so anyone can reproduce the results.
