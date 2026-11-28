@@ -1,5 +1,6 @@
 
-Project Reflection
+Project Reflection - Ethan Laviolette
+GitHub Repository: https://github.com/ezlaviol/Data-Mining-Problem-2-Glaucoma-Detection-using-Clinical-Notes.git
 
 (a) What’s your biggest challenge in the project? How did you address the challenge?
 My biggest challenge was dealing with overfitting and false positives in the Bidirectional GRU model. Clinical notes are messy and long, and a lot of patients without glaucoma still have phrases like "glaucoma suspect" or "family history of glaucoma" in their charts. Even though the Bi-GRU's training loss got very low (down to 0.0703), it started memorizing those keywords and predicting "yes" too often, which tanked its specificity down to 0.6443. To handle this, I made sure the vocabulary (top 10,000 words) was built strictly from the training data so no test data leaked in, capped sequences at 256 tokens with 0.30 dropout, and compared it against a 1D CNN. The 1D CNN ended up handling local phrase patterns much better, bringing specificity up to 0.8151 and overall AUC to 0.8793.
